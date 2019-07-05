@@ -108,7 +108,7 @@ resource "aws_s3_bucket_object" "lambda_init" {
 
   key    = "lambdas/v${local.app_version}/init.zip"
   source = "${data.archive_file.lambda_init.output_path}"
-  etag   = "${md5(file("lambdas/dist/init.zip"))}"
+  etag   = "${filemd5("lambdas/dist/init.zip")}"
 }
 
 resource "aws_s3_bucket_object" "lambda_worker" {
@@ -116,7 +116,7 @@ resource "aws_s3_bucket_object" "lambda_worker" {
 
   key    = "lambdas/v${local.app_version}/worker.zip"
   source = "${data.archive_file.lambda_worker.output_path}"
-  etag   = "${md5(file("lambdas/dist/worker.zip"))}"
+  etag   = "${filemd5("lambdas/dist/worker.zip")}"
 }
 
 resource "aws_s3_bucket_object" "lambda_post_processor" {
@@ -124,7 +124,7 @@ resource "aws_s3_bucket_object" "lambda_post_processor" {
 
   key    = "lambdas/v${local.app_version}/post-processor.zip"
   source = "${data.archive_file.lambda_post_processor.output_path}"
-  etag   = "${md5(file("lambdas/dist/post-processor.zip"))}"
+  etag   = "${filemd5("lambdas/dist/post-processor.zip")}"
 }
 
 resource "aws_iam_role" "lambda_init" {
@@ -291,7 +291,7 @@ resource "aws_lambda_function" "worker" {
   memory_size = "${local.lambda_worker_memory}"
   timeout     = "${local.lambda_worker_timeout}"
 
-  dead_letter_config = {
+  dead_letter_config {
     target_arn = "${aws_sns_topic.pages_to_test_dlq.arn}"
   }
 

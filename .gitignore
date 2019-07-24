@@ -9,3 +9,5 @@ reports/*
 analysis/*
 analyzeruns.py
 outliers.py
+lighthouse-parallel
+urls.prd.json

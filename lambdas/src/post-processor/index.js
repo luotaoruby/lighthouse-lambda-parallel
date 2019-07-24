@@ -4,9 +4,6 @@ const ddb = new AWS.DynamoDB.DocumentClient();
 AWS.config.update({ region: process.env.REGION });
 
 const s3 = new AWS.S3()
-const s3Key = (jobId, runId, outputFormat) => {
-  `raw_reports/${outputFormat}/jobs/${jobId}/runs/${runId}.${outputFormat}`
-}
 
 // Completions across success and error, to compare against total pages
 const pageCountCompleted = image =>
@@ -37,13 +34,17 @@ async function fetchObjectsByJobId(jobId) {
       Prefix: `raw_reports/json/jobs/${jobId}/runs/`
     }
 
-    s3.listObjects(s3Params, (err, data) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(data)
-      }
-    })
+    try {
+      s3.listObjects(s3Params, (err, data) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(data)
+        }
+      })
+    } catch(e) {
+      console.log('>>>>>', e)
+    }
   })
 }
 

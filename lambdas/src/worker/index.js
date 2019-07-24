@@ -74,7 +74,6 @@ async function uploadReportsToS3(
     s3
       .upload({
         Bucket: process.env.BUCKET,
-        ACL: 'public-read',
         Key: jsonReportS3Key,
         Body: jsonReport,
         ContentType: "application/json"
@@ -83,7 +82,6 @@ async function uploadReportsToS3(
     s3
       .upload({
         Bucket: process.env.BUCKET,
-        ACL: 'public-read',
         Key: htmlReportS3Key,
         Body: htmlReport,
         ContentType: "text/html"

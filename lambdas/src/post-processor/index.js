@@ -68,7 +68,7 @@ exports.handler = async function(event, context) {
   const s3Params = {
     Bucket: process.env.BUCKET,
     Delimiter: '/',
-    Prefix: `raw_report/json/jobs/${jobId}/runs/`,
+    Prefix: `raw_reports/json/jobs/${jobId}/runs/`,
     MaxKeys: 100
   }
 

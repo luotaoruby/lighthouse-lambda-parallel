@@ -169,8 +169,6 @@ exports.handler = async function(event, context) {
     return chrome.kill();
   }
 
-  await updateJobItemAndCreateRunItem(jobId, "PageCountSuccess", runId, url);
-
   try {
     await uploadReportsToS3(
       jsonReportS3Key,
@@ -183,6 +181,8 @@ exports.handler = async function(event, context) {
     // this kinda failure should be rare.
     console.log("error uploading reports to s3:", err);
   }
+
+  await updateJobItemAndCreateRunItem(jobId, "PageCountSuccess", runId, url);
 
   return chrome.kill();
 };

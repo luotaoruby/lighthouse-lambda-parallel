@@ -19,7 +19,7 @@ provider "aws" {
 # Bucket for storing LH reports, and deployed lambda functions.
 resource "aws_s3_bucket" "lighthouse_metrics" {
   bucket = "${local.org}-lighthouse-metrics"
-  acl    = "private"
+  acl    = "public-read"
 }
 
 # Here we will store job metadata, including status 

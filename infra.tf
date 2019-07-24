@@ -1,6 +1,6 @@
 # Plug in your unique configuration here 
 locals {
-  app_version         = "0.0.105"
+  app_version         = "0.0.106"
   org                 = "lt"
   aws_region          = "us-west-2"
   aws_creds_file_path = "~/.aws/credentials"
@@ -350,19 +350,7 @@ resource "aws_iam_role" "lambda_post_processor" {
       },
       "Effect": "Allow",
       "Sid": ""
-    },
-    {
-      "Action": [
-        "s3:Get*",
-        "s3:List*",
-        "s3:Put*"
-      ],
-      "Effect": "Allow",
-      "Resource": [
-        "${aws_s3_bucket.lighthouse_metrics.arn}",
-        "${aws_s3_bucket.lighthouse_metrics.arn}/*"
-      ]
-    },
+    }
   ]
 }
 EOF
@@ -401,6 +389,18 @@ resource "aws_iam_role_policy" "lambda_post_processor" {
       ],
       "Resource": "arn:aws:logs:*:*:*",
       "Effect": "Allow"
+    },
+    {
+      "Action": [
+        "s3:Get*",
+        "s3:List*",
+        "s3:Put*"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "${aws_s3_bucket.lighthouse_metrics.arn}",
+        "${aws_s3_bucket.lighthouse_metrics.arn}/*"
+      ]
     }
   ]
 }

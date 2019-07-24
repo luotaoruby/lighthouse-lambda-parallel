@@ -29,10 +29,15 @@ async function setDynamoTimestampNow(jobId, attribute) {
 
 async function getObjects(jobId) {
   const resp = await s3.listObjectsV2({
-    Bucket: process.env.BUCKET
+    Bucket: process.env.BUCKET,
+    Prefix: `raw_reports/json/jobs/${jobId}/runs/`
   }).promise()
 
-  console.log('e', resp.Content)
+  resp.Contents.forEach(obj => {
+    console.log(obj.Key)
+  })
+
+  return resp.Contents
 }
 
 exports.handler = async function(event, context) {

@@ -36,13 +36,15 @@ async function fetchObjectsByJobId(jobId) {
     Prefix: `raw_reports/json/jobs/${jobId}/runs/`
   }
 
-  return s3.listObjects(s3Params, (err, data) => {
+  await s3.listObjects(s3Params, (err, data) => {
     if (err) {
       console.log('Error', err)
     } else {
       console.log('Success', data)
     }
-  }).promise()
+  })
+
+  return Promise.resolve()
 }
 
 exports.handler = async function(event, context) {

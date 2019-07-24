@@ -290,6 +290,7 @@ resource "aws_lambda_function" "worker" {
 
   memory_size = "${local.lambda_worker_memory}"
   timeout     = "${local.lambda_worker_timeout}"
+  reserved_concurrent_executions = "3"
 
   dead_letter_config {
     target_arn = "${aws_sns_topic.pages_to_test_dlq.arn}"

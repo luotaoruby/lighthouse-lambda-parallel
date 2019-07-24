@@ -406,7 +406,8 @@ resource "aws_lambda_function" "post_processor" {
 
   environment {
     variables = {
-      TABLE_NAME = "${aws_dynamodb_table.lighthouse_metrics_jobs.id}"
+      TABLE_NAME = "${aws_dynamodb_table.lighthouse_metrics_jobs.id}",
+      BUCKET          = "${aws_s3_bucket.lighthouse_metrics.id}"
     }
   }
 }

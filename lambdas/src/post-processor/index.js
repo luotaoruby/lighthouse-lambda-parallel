@@ -3,6 +3,11 @@ const ddb = new AWS.DynamoDB.DocumentClient();
 
 AWS.config.update({ region: process.env.REGION });
 
+const s3 = AWS.S3()
+const s3Key = (jobId, runId, outputFormat) => {
+  `raw_reports/${outputFormat}/jobs/${jobId}/runs/${runId}.${outputFormat}`
+}
+
 // Completions across success and error, to compare against total pages
 const pageCountCompleted = image =>
   parseInt(image.PageCountSuccess.N, 10) + parseInt(image.PageCountError.N, 10);
@@ -58,6 +63,22 @@ exports.handler = async function(event, context) {
     record.dynamodb.NewImage.JobId.S,
     "LighthouseRunEndTime"
   );
+
+  const jobId = record.dynamodb.NemImage.JobId.S
+  const s3Params = {
+    Bucket: process.env.BUCKET,
+    Delimiter: '/',
+    Prefix: `raw_report/json/jobs/${jobId}/runs/`,
+    MaxKeys: 100
+  }
+
+  await s3.listObjects(s3Params, function(err, data) {
+    if (err)  {
+      console.log("Error", error)
+    } else {
+      console.log("Success", data)
+    }
+  })
 
   return Promise.resolve();
 };

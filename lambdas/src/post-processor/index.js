@@ -64,7 +64,7 @@ exports.handler = async function(event, context) {
     "LighthouseRunEndTime"
   );
 
-  const jobId = record.dynamodb.NenImage.JobId.S
+  const jobId = record.dynamodb.NewImage.JobId.S
   const s3Params = {
     Bucket: process.env.BUCKET,
     Delimiter: '/',

@@ -27,25 +27,12 @@ async function setDynamoTimestampNow(jobId, attribute) {
   return ddb.update(params).promise();
 }
 
-async function fetchObjectsByJobId(jobId) {
-  return new Promise((resolve, reject) => {
-    const s3Params = {
-      Bucket: process.env.BUCKET,
-      Prefix: `raw_reports/json/jobs/${jobId}/runs/`
-    }
+async function getObjects(jobId) {
+  const resp = await s3.listObjectsV2({
+    Bucket: process.env.BUCKET
+  }).promise()
 
-    try {
-      s3.listObjects(s3Params, (err, data) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(data)
-        }
-      })
-    } catch(e) {
-      console.log('>>>>>', e)
-    }
-  })
+  console.log('e', resp.Content)
 }
 
 exports.handler = async function(event, context) {
@@ -83,7 +70,7 @@ exports.handler = async function(event, context) {
   );
 
   const jobId = record.dynamodb.NewImage.JobId.S
-  const data = await fetchObjectsByJobId(jobId)
+  const data = await getObjects(jobId)
   console.log('====', data)
 
   return Promise.resolve();

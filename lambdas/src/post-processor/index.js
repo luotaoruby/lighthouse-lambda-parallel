@@ -3,7 +3,7 @@ const ddb = new AWS.DynamoDB.DocumentClient();
 
 AWS.config.update({ region: process.env.REGION });
 
-const s3 = AWS.S3()
+const s3 = new AWS.S3()
 const s3Key = (jobId, runId, outputFormat) => {
   `raw_reports/${outputFormat}/jobs/${jobId}/runs/${runId}.${outputFormat}`
 }

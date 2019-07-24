@@ -350,7 +350,19 @@ resource "aws_iam_role" "lambda_post_processor" {
       },
       "Effect": "Allow",
       "Sid": ""
-    }
+    },
+    {
+      "Action": [
+        "s3:Get*",
+        "s3:List*",
+        "s3:Put*"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "${aws_s3_bucket.lighthouse_metrics.arn}",
+        "${aws_s3_bucket.lighthouse_metrics.arn}/*"
+      ]
+    },
   ]
 }
 EOF

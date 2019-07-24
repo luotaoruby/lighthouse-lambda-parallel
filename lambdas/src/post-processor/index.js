@@ -30,12 +30,10 @@ async function setDynamoTimestampNow(jobId, attribute) {
   return ddb.update(params).promise();
 }
 
-async function fetchObjectsByJobId(jobId, format='json') {
+async function fetchObjectsByJobId(jobId) {
   const s3Params = {
     Bucket: process.env.BUCKET,
-    Delimiter: '/',
-    Prefix: `raw_reports/json/jobs/${jobId}/runs/`,
-    MaxKeys: 100
+    Prefix: `raw_reports/json/jobs/${jobId}/runs/`
   }
 
   return s3.listObjects(s3Params, (err, data) => {

@@ -30,6 +30,23 @@ async function setDynamoTimestampNow(jobId, attribute) {
   return ddb.update(params).promise();
 }
 
+async function fetchObjectsByJobId(jobId, format='json') {
+  const s3Params = {
+    Bucket: process.env.BUCKET,
+    Delimiter: '/',
+    Prefix: `raw_reports/json/jobs/${jobId}/runs/`,
+    MaxKeys: 100
+  }
+
+  return s3.listObjects(s3Params, (err, data) => {
+    if (err) {
+      console.log('Error', err)
+    } else {
+      console.log('Success', data)
+    }
+  }).promise()
+}
+
 exports.handler = async function(event, context) {
   // We set the batches so that there will only ever be
   // one message received here -- so snag the first
@@ -65,20 +82,7 @@ exports.handler = async function(event, context) {
   );
 
   const jobId = record.dynamodb.NewImage.JobId.S
-  const s3Params = {
-    Bucket: process.env.BUCKET,
-    Delimiter: '/',
-    Prefix: `raw_reports/json/jobs/${jobId}/runs/`,
-    MaxKeys: 100
-  }
-
-  await s3.listObjects(s3Params, function(err, data) {
-    if (err)  {
-      console.log("Error", err)
-    } else {
-      console.log("Success", data)
-    }
-  })
+  await fetchObjectsByJobId(jobId)
 
   return Promise.resolve();
 };

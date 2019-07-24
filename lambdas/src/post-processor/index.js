@@ -74,7 +74,7 @@ exports.handler = async function(event, context) {
 
   await s3.listObjects(s3Params, function(err, data) {
     if (err)  {
-      console.log("Error", error)
+      console.log("Error", err)
     } else {
       console.log("Success", data)
     }

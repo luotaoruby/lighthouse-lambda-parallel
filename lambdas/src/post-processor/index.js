@@ -83,9 +83,5 @@ exports.handler = async function(event, context) {
     "LighthouseRunEndTime"
   );
 
-  const jobId = record.dynamodb.NewImage.JobId.S
-  const data = await getObjects(jobId)
-  console.log('Data', data)
-
   return Promise.resolve();
 };

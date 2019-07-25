@@ -28,9 +28,6 @@ module.exports = function(json) {
     i18n
   } = json
 
-  const { performance, pwa, accessibility, seo } = categories
-  const bestPractices = categories['best-practices']
-
   const performanceScore = categoriesScore(categories, 'performance')
   const pwaScore = categoriesScore(categories, 'pwa')
   const accessibilityScore = categoriesScore(categories, 'accessibility')

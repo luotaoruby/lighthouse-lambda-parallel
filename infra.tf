@@ -66,26 +66,6 @@ resource "aws_dynamodb_table" "lighthouse_metrics_runs" {
     name = "JobId"
     type = "S"
   }
-
-  attribute {
-    name = "Url"
-    type = "S"
-  }
-
-  attribute {
-    name = "LHFetchTime"
-    type = "S"
-  }
-
-  attribute {
-    name = "LHPerformanceScore"
-    type = "N"
-  }
-
-  attribute {
-    name = "LHSeoScore"
-    type = "N"
-  }
 }
 
 resource "aws_sns_topic" "pages_to_test" {

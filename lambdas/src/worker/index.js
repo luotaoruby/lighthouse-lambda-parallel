@@ -178,8 +178,8 @@ exports.handler = async function(event, context) {
     ExpressionAttributeValues: {
       ":url": json.meta.finalUrl,
       ":ft": json.meta.fetchTime,
-      ":ps": json.meta.score.performance,
-      ":ss": json.meta.score.seo
+      ":ps": json.core.performance,
+      ":ss": json.core.seo
     },
     UpdateExpression: "SET #URL = :url, #FT = :ft, #PS = :ps, #SS = :ss"
   }

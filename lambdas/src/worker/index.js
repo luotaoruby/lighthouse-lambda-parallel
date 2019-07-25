@@ -165,7 +165,9 @@ exports.handler = async function(event, context) {
 
   const [jsonReport, htmlReport] = results.report;
 
-  json = parseJsonReport(jsonReport)
+  const json = parseJsonReport(jsonReport)
+
+  console.log('JSON', json)
 
   // we pass true to make it a guaranteed consistent read, which is more
   // expensive and more accurate.

@@ -162,7 +162,7 @@ exports.handler = async function(event, context) {
 
   console.log('JsonReport', jsonReport)
 
-  json = jsonReport
+  json = parseJsonReport(jsonReport)
 
   const updatedRun = {
     TableName: process.env.RUNS_TABLE_NAME,

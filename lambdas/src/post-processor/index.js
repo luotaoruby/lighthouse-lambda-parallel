@@ -33,11 +33,20 @@ async function getObjects(jobId) {
     Prefix: `raw_reports/json/jobs/${jobId}/runs/`
   }).promise()
 
-  resp.Contents.forEach(obj => {
-    console.log(obj.Key)
-  })
+  let objects = []
 
-  return resp.Contents
+  for (let obj of resp.Contents) {
+    const objResp = await s3.getObject({ Bucket: process.env.BUCKET, Key: obj.Key }).
+      promise()
+    const body = objResp.Body.toString('utf-8')
+
+    objects.push({
+      Key: obj.Key,
+      Body: body
+    })
+  }
+
+  return objects
 }
 
 exports.handler = async function(event, context) {
@@ -76,7 +85,7 @@ exports.handler = async function(event, context) {
 
   const jobId = record.dynamodb.NewImage.JobId.S
   const data = await getObjects(jobId)
-  console.log('====', data)
+  console.log('Data', data)
 
   return Promise.resolve();
 };

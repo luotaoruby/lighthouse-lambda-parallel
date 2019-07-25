@@ -29,10 +29,12 @@ async function updateJobItemAndCreateRunItem(
 
   await ddb.update(updatedJob).promise();
 
+  json = JSON.parse(json)
+
   const url = json['finalUrl']
   const fetchTime = json['fetchTime']
-  const performanceScore = json['categories']['performance']['score']
-  const seoScore = json['categories']['seo']['score']
+  const performanceScore = json['categories']['performance']['score'] * 100
+  const seoScore = json['categories']['seo']['score'] * 100
 
   const newRun = {
     TableName: process.env.RUNS_TABLE_NAME,
@@ -132,6 +134,7 @@ exports.handler = async function(event, context) {
       "PageCountError",
       originalRecord.Sns.MessageId,
       originalRecord.Sns.MessageAttributes.URL.Value,
+      {},
       `ended up in dlq: ${JSON.stringify(
         record.Sns.MessageAttributes.ErrorMessage.Value
       )}`

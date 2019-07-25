@@ -13,8 +13,8 @@ async function updateJobItemAndCreateRunItem(
   jobAttrToIncrement,
   runId,
   runUrl,
-  runError,
-  json
+  json,
+  runError
 ) {
   const updatedJob = {
     TableName: process.env.JOBS_TABLE_NAME,

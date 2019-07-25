@@ -1,5 +1,6 @@
 const AWS = require("aws-sdk");
 
+const parseJsonReport = require('./parse-json-report.js');
 const createLighthouse = require("./create-lighthouse.js");
 const fs = require("fs");
 
@@ -158,6 +159,8 @@ exports.handler = async function(event, context) {
   const results = await start();
 
   const [jsonReport, htmlReport] = results.report;
+
+  console.log('JsonReport', jsonReport)
 
   // we pass true to make it a guaranteed consistent read, which is more
   // expensive and more accurate.

@@ -1,6 +1,5 @@
 const AWS = require("aws-sdk");
 
-const parseJsonReport = require('./parse-json.js');
 const createLighthouse = require("./create-lighthouse.js");
 const fs = require("fs");
 
@@ -30,15 +29,20 @@ async function updateJobItemAndCreateRunItem(
 
   await ddb.update(updatedJob).promise();
 
+  const url = json['finalUrl']
+  const fetchTime = json['fetchTime']
+  const performanceScore = json['categories']['performance']['score']
+  const seoScore = json['categories']['seo']['score']
+
   const newRun = {
     TableName: process.env.RUNS_TABLE_NAME,
     Item: {
       JobId: jobId,
       RunId: runId,
-      URL: json.meta.finalUrl,
-      LHFetchTime: json.meta.fetchTime,
-      LHPerformanceScore: json.score.performance,
-      LHSeoScore: json.score.seo
+      URL: url,
+      LHFetchTime: fetchTime,
+      LHPerformanceScore: performanceScore,
+      LHSeoScore: seoScore
     }
   };
 
@@ -165,9 +169,7 @@ exports.handler = async function(event, context) {
 
   const [jsonReport, htmlReport] = results.report;
 
-  const json = parseJsonReport(jsonReport)
-
-  console.log('JSON', json)
+  console.log('JSON', jsonReport)
 
   // we pass true to make it a guaranteed consistent read, which is more
   // expensive and more accurate.
@@ -192,7 +194,7 @@ exports.handler = async function(event, context) {
     console.log("error uploading reports to s3:", err);
   }
 
-  await updateJobItemAndCreateRunItem(jobId, "PageCountSuccess", runId, url, json);
+  await updateJobItemAndCreateRunItem(jobId, "PageCountSuccess", runId, url, jsonReport);
 
   return chrome.kill();
 };

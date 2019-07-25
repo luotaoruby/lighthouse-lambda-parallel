@@ -14,7 +14,8 @@ async function updateJobItemAndCreateRunItem(
   jobAttrToIncrement,
   runId,
   runUrl,
-  runError
+  runError,
+  json
 ) {
   const updatedJob = {
     TableName: process.env.JOBS_TABLE_NAME,
@@ -33,7 +34,11 @@ async function updateJobItemAndCreateRunItem(
     TableName: process.env.RUNS_TABLE_NAME,
     Item: {
       JobId: jobId,
-      RunId: runId
+      RunId: runId,
+      URL: json.meta.finalUrl,
+      LHFetchTime: json.meta.fetchTime,
+      LHPerformanceScore: json.score.performance,
+      LHSeoScore: json.score.seo
     }
   };
 
@@ -160,35 +165,7 @@ exports.handler = async function(event, context) {
 
   const [jsonReport, htmlReport] = results.report;
 
-  console.log('JsonReport', jsonReport)
-
   json = parseJsonReport(jsonReport)
-
-  const updatedRun = {
-    TableName: process.env.RUNS_TABLE_NAME,
-    Key: {
-      RunId: runId
-    },
-    ExpressionAttributeNames: {
-      "#URL": "URL",
-      "#FT": "LHFetchTime",
-      "#PS": "LHPerformanceScore",
-      "#SS": "LHSeoScore"
-    },
-    ExpressionAttributeValues: {
-      ":url": json.meta.finalUrl,
-      ":ft": json.meta.fetchTime,
-      ":ps": json.core.performance,
-      ":ss": json.core.seo
-    },
-    UpdateExpression: "SET #URL = :url, #FT = :ft, #PS = :ps, #SS = :ss"
-  }
-
-  console.log('Update', updatedRun)
-
-  const u = await ddb.update(updatedRun).promise()
-  console.log('U?', u)
-
 
   // we pass true to make it a guaranteed consistent read, which is more
   // expensive and more accurate.
@@ -213,7 +190,7 @@ exports.handler = async function(event, context) {
     console.log("error uploading reports to s3:", err);
   }
 
-  await updateJobItemAndCreateRunItem(jobId, "PageCountSuccess", runId, url);
+  await updateJobItemAndCreateRunItem(jobId, "PageCountSuccess", runId, url, json);
 
   return chrome.kill();
 };

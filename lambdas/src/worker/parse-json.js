@@ -1,11 +1,3 @@
-const CATEGORIES = [
-  'performance',
-  'pwa',
-  'accessibility',
-  'seo',
-  'best-practices'
-]
-
 const categoriesScore = (categories, category) => {
   return categories[category]['score'] * 100
 }

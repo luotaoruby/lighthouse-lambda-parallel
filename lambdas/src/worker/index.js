@@ -1,6 +1,6 @@
 const AWS = require("aws-sdk");
 
-const parseJsonReport = require('./parse-json-report.js');
+const parseJsonReport = require('./parse-json.js');
 const createLighthouse = require("./create-lighthouse.js");
 const fs = require("fs");
 
